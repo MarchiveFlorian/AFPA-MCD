@@ -6,12 +6,13 @@ CREATE TABLE class(
 
 CREATE TABLE classroom(
    id SERIAL,
-   class_id integer,
    number INTEGER,
-   "floor" INTEGER,
+   _floor_ INTEGER,
    building VARCHAR(50) ,
+   id_1 INTEGER,
    PRIMARY KEY(id),
-   FOREIGN KEY(class_id) REFERENCES class(id)
+   UNIQUE(id_1),
+   FOREIGN KEY(id_1) REFERENCES class(id)
 );
 
 CREATE TABLE person(
@@ -23,51 +24,44 @@ CREATE TABLE person(
 
 CREATE TABLE teacher(
    id SERIAL,
-   person_id integer, 
+   id_1 INTEGER NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(person_id) REFERENCES person(id)
+   UNIQUE(id_1),
+   FOREIGN KEY(id_1) REFERENCES person(id)
 );
 
 CREATE TABLE subject(
    id SERIAL,
    name VARCHAR(50)  NOT NULL,
-   teacher_id INTEGER,
+   id_1 INTEGER,
    PRIMARY KEY(id),
-   FOREIGN KEY(teacher_id) REFERENCES teacher(id)
+   FOREIGN KEY(id_1) REFERENCES teacher(id)
 );
 
 CREATE TABLE student(
    id SERIAL,
-   class_id INTEGER NOT NULL,
-   person_id INTEGER NOT NULL,
+   id_1 INTEGER NOT NULL,
+   id_2 INTEGER NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(class_id) REFERENCES class(id),
-   FOREIGN KEY(person_id) REFERENCES person(id)
-);
-
-CREATE TABLE grade(
-   id SERIAL,
-   graduation INTEGER,
-   student_id INTEGER NOT NULL,
-   PRIMARY KEY(id),
-   FOREIGN KEY(student_id) REFERENCES student(id)
+   UNIQUE(id_2),
+   FOREIGN KEY(id_1) REFERENCES class(id),
+   FOREIGN KEY(id_2) REFERENCES person(id)
 );
 
 CREATE TABLE grade_subject(
    id INTEGER,
-   grade_id INTEGER,
-   subject_id integer, 
-   PRIMARY KEY(id),
-   FOREIGN KEY(subject_id) REFERENCES subject(id),
-   FOREIGN KEY(grade_id) REFERENCES grade(id)
+   id_1 INTEGER,
+   _value_ INTEGER,
+   PRIMARY KEY(id, id_1),
+   FOREIGN KEY(id) REFERENCES subject(id),
+   FOREIGN KEY(id_1) REFERENCES student(id)
 );
 
 CREATE TABLE class_subject(
    id INTEGER,
-   subject_id INTEGER,
-   class_id integer,
-   "hour" NUMERIC(15,2)  ,
-   PRIMARY KEY(id),
-   FOREIGN KEY(class_id) REFERENCES class(id),
+   id_1 INTEGER,
+   _hour_ NUMERIC(15,2)  ,
+   PRIMARY KEY(id, id_1),
+   FOREIGN KEY(id) REFERENCES class(id),
    FOREIGN KEY(id_1) REFERENCES subject(id)
 );
